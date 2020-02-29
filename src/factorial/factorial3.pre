@@ -1,0 +1,11 @@
+#pragma module: MAIN
+result := MODULE.CALL(@FACTORIAL, FACTORIAL.INPUT)
+FACTORIAL.RETURN(result)
+
+#pragma module: FACTORIAL
+n := MODULE.CALL.ARGS[0]
+result := 1
+REPEAT n
+  result *= n+1
+ENDREP
+MODULE.RETURN(result)
