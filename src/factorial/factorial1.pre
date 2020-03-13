@@ -1,4 +1,4 @@
-#pragma module: FACTORIAL
+@FACTORIAL:
 n := FACTORIAL.INPUT
 result := 1
 REPEAT n

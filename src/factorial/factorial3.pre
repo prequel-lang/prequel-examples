@@ -1,8 +1,8 @@
-#pragma module: MAIN
+@MAIN:
 result := MODULE.CALL(@FACTORIAL, FACTORIAL.INPUT)
 FACTORIAL.RETURN(result)
 
-#pragma module: FACTORIAL
+@FACTORIAL:
 n := MODULE.CALL.ARGS[0]
 result := 1
 REPEAT n
