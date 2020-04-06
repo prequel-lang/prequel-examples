@@ -1,0 +1,36 @@
+@BIASED-RANDOM-WALK:
+IF lastTurn IS UNDEFINED
+  lastTurn := 0
+ENDIF
+options := MAZE.CAN.MOVE.FORWARD
+options += MAZE.CAN.MOVE.LEFT
+options += MAZE.CAN.MOVE.RIGHT
+IF options = 0   # dead end
+  lastTurn := 1
+  turnLeft :~ 2
+  IF turnLeft = 1
+    MAZE.TURN.LEFT()
+  ELSE
+    MAZE.TURN.RIGHT()
+  ENDIF
+ENDIF
+IF lastTurn = 1 AND MAZE.CAN.MOVE.FORWARD = 1
+  lastTurn := 0
+  MAZE.MOVE.FORWARD()
+ENDIF
+rndOption :~ options
+IF MAZE.CAN.MOVE.LEFT = 1
+  IF rndOption = 0
+    lastTurn := 1
+    MAZE.TURN.LEFT()
+  ENDIF
+  rndOption--
+ENDIF
+IF MAZE.CAN.MOVE.RIGHT = 1
+  IF rndOption = 0
+    lastTurn := 1
+    MAZE.TURN.RIGHT()
+  ENDIF
+ENDIF
+lastTurn := 0
+MAZE.MOVE.FORWARD()

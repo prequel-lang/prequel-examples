@@ -1,0 +1,25 @@
+@RANDOM-WALK:
+options := MAZE.CAN.MOVE.FORWARD
+options += MAZE.CAN.MOVE.LEFT
+options += MAZE.CAN.MOVE.RIGHT
+IF options = 0   # dead end
+  turnLeft :~ 2
+  IF turnLeft = 1
+    MAZE.TURN.LEFT()
+  ELSE
+    MAZE.TURN.RIGHT()
+  ENDIF
+ENDIF
+randomOption :~ options
+IF MAZE.CAN.MOVE.LEFT = 1
+  IF randomOption = 0
+    MAZE.TURN.LEFT()
+  ENDIF
+  randomOption--
+ENDIF
+IF MAZE.CAN.MOVE.RIGHT = 1
+  IF randomOption = 0
+    MAZE.TURN.RIGHT()
+  ENDIF
+ENDIF
+MAZE.MOVE.FORWARD()
