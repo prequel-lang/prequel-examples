@@ -1,0 +1,143 @@
+@SEARCH-NEAR-BEST-KNOWN:
+IF incrIdxs IS UNDEFINED
+  incrIdxs := []
+  n := CONNXXIS.HISCORE.INCR.INDEX+1
+  REPEAT n
+    i := incrIdxs.LENGTH
+    c := CONNXXIS.HISCORE.INCR.COUNT(i)
+    LOG "++ " i " " c
+    incrIdxs.PUSH 0
+  ENDREP
+  iidx := 0
+  ilen := CONNXXIS.HISCORE.INCR.COUNT(iidx)
+  LOG iidx " " incrIdxs[iidx] " " ilen
+  wmin := 0
+  hnow := 1
+  hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
+  hvts := hiscore[CONNXXIS.INDEX.VERTEX.TILE]
+  htrs := hiscore[CONNXXIS.INDEX.TILE.ROTATION]
+  CONNXXIS.SETUP.TILES(hvts, htrs)
+ENDIF
+IF CONNXXIS.HISCORE.INCR.INDEX >= incrIdxs.LENGTH
+  n := CONNXXIS.HISCORE.INCR.INDEX+1-incrIdxs.LENGTH
+  REPEAT n
+    i := incrIdxs.LENGTH
+    c := CONNXXIS.HISCORE.INCR.COUNT(i)
+    LOG "++ " i " " c
+    incrIdxs.PUSH 0
+  ENDREP
+ENDIF
+IF hnow = 1
+  hnow := 0
+  stack := []
+  v := CONNXXIS.COUNT.VERTEX
+  REPEAT v
+    n := CONNXXIS.COUNT.VERTEX
+    REPEAT n
+      IF v = n
+        REPNEXT
+      ENDIF
+      info := [v, n, []]
+      info[2] := MODULE.CALL(@GET_ROTATIONS, v, n)
+      stack.QUEUE info
+    ENDREP
+  ENDREP
+  info := stack.UNQUEUE
+  v := info.UNQUEUE
+  u := info.UNQUEUE
+  rotations := info.UNQUEUE
+  undoMove := 0
+  CONNXXIS.MOVE(CONNXXIS.VERTEX.TILE[u], v)
+ENDIF
+IF rotations.LENGTH > 0
+  rotation := rotations.UNQUEUE
+  tileRotations := CONNXXIS.TILE.ROTATION
+  tileRotations[CONNXXIS.VERTEX.TILE[u]] := rotation[0]
+  tileRotations[CONNXXIS.VERTEX.TILE[v]] := rotation[1]
+  CONNXXIS.SETUP.TILES(CONNXXIS.VERTEX.TILE, tileRotations)
+ENDIF
+IF undoMove = 0
+  undoMove := 1
+  CONNXXIS.MOVE(CONNXXIS.VERTEX.TILE[u], v)
+ENDIF
+IF stack.LENGTH > 0
+  info := stack.UNQUEUE
+  v := info.UNQUEUE
+  u := info.UNQUEUE
+  rotations := info.UNQUEUE
+  undoMove := 0
+  CONNXXIS.MOVE(CONNXXIS.VERTEX.TILE[u], v)
+ENDIF
+incrIdxs[iidx]++
+IF incrIdxs[iidx] < ilen
+  LOG iidx " " incrIdxs[iidx] " " ilen
+  wmin := 0
+  hnow := 1
+  hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
+  hvts := hiscore[CONNXXIS.INDEX.VERTEX.TILE]
+  htrs := hiscore[CONNXXIS.INDEX.TILE.ROTATION]
+  CONNXXIS.SETUP.TILES(hvts, htrs)
+ELSE
+  IF incrIdxs[iidx] > ilen
+    incrIdxs[iidx] := ilen
+  ENDIF
+  IF iidx < CONNXXIS.HISCORE.INCR.INDEX
+    iidx++
+    ilen := CONNXXIS.HISCORE.INCR.COUNT(iidx)
+    LOG iidx " " incrIdxs[iidx] " " ilen
+    wmin := 0
+    hnow := 1
+    hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
+    hvts := hiscore[CONNXXIS.INDEX.VERTEX.TILE]
+    htrs := hiscore[CONNXXIS.INDEX.TILE.ROTATION]
+    CONNXXIS.SETUP.TILES(hvts, htrs)
+  ENDIF
+ENDIF
+wmin++
+IF wmin <= 24*60
+  LOG "wait:" wmin
+  CONNXXIS.WAIT(60)
+ENDIF
+LOG "halt"
+CONNXXIS.HALT()
+
+@GET_ROTATIONS:
+v := MODULE.CALL.ARGS[0]
+u := MODULE.CALL.ARGS[1]
+areAdjacent := MODULE.CALL(@ARE_ADJACENT, v, u)
+vtr := CONNXXIS.TILE.ROTATION[CONNXXIS.VERTEX.TILE[v]]
+utr := CONNXXIS.TILE.ROTATION[CONNXXIS.VERTEX.TILE[u]]
+rotations := []
+IF areAdjacent = 1
+  n := 6
+  REPEAT n
+    m := 6
+    REPEAT m
+      rotations.QUEUE [(vtr+n)%6, (utr+m)%6]
+    ENDREP
+  ENDREP
+  rotz := rotations.UNQUEUE
+  rotations.PUSH rotz
+ELSE
+  n := 5
+  REPEAT n
+    rotations.QUEUE [(vtr+n+1)%6, utr]
+  ENDREP
+  n := 5
+  REPEAT n
+    rotations.QUEUE [vtr, (utr+n+1)%6]
+  ENDREP
+  rotations.PUSH [vtr, utr]
+ENDIF
+MODULE.RETURN(rotations)
+
+@ARE_ADJACENT:
+v := MODULE.CALL.ARGS[0]
+u := MODULE.CALL.ARGS[1]
+n := CONNXXIS.COUNT.FACE
+REPEAT n
+  IF CONNXXIS.VERTEX.FACE.VERTEX[v][n] = u
+    MODULE.RETURN(1)
+  ENDIF
+ENDREP
+MODULE.RETURN(0)
