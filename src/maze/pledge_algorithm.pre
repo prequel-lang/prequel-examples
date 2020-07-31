@@ -1,0 +1,21 @@
+@PLEDGE-ALGORITHM:
+IF totalTurns IS UNDEFINED
+  totalTurns := 0
+  forceForward := 0
+ENDIF
+IF forceForward = 1
+  forceForward := 0
+  MAZE.MOVE.FORWARD()
+ELSIF totalTurns = 0
+  IF MAZE.CAN.MOVE.FORWARD = 1
+    MAZE.MOVE.FORWARD()
+  ENDIF
+ELSIF MAZE.CAN.MOVE.RIGHT = 1
+  forceForward := 1
+  totalTurns -= 1
+  MAZE.TURN.RIGHT()
+ELSIF MAZE.CAN.MOVE.FORWARD = 1
+  MAZE.MOVE.FORWARD()
+ENDIF
+totalTurns += 1
+MAZE.TURN.LEFT()
