@@ -1,4 +1,4 @@
-@PLEDGE-ALGORITHM:
+@PLEDGE_ALGORITHM:
 IF totalTurns IS UNDEFINED
   totalTurns := 0
   forceForward := 0
