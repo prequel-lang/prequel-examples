@@ -1,0 +1,19 @@
+@Larson:
+# ported and adapted from:
+#   https://github.com/pimoroni/blinkt/blob/master/examples/larson.py
+
+IF REDS IS UNDEFINED
+  REDS := [0, 16, 64, 128, 128, 192, 192, 255, 255, 192, 192, 128, 128, 64, 16, 0]
+  BLINKP.SET_BRIGHTNESS(7)
+ENDIF
+delta := BLINKP.ELAPSED_TIME / 96
+offset := (delta % REDS.LENGTH) - BLINKP.NUM_PIXELS
+IF offset < 0
+  offset *= -1
+ENDIF
+n := BLINKP.NUM_PIXELS
+REPEAT n
+  i := BLINKP.NUM_PIXELS-n-1
+  BLINKP.SET_PIXEL(i, REDS[offset+i], 0, 0)
+ENDREP
+BLINKP.SHOW_AND_WAIT(100)
