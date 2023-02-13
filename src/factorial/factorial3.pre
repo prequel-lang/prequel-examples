@@ -6,6 +6,6 @@ FACTORIAL.RETURN(result)
 n := MODULE.CALL.ARGS[0]
 result := 1
 REPEAT n
-  result *= n+1
+ result *= n+1
 ENDREP
 MODULE.RETURN(result)

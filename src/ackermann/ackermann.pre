@@ -1,21 +1,21 @@
 @ACKERMANN:
 IF ackermann IS UNDEFINED
-  ackermann := [ACKERMANN.INPUT]
+ ackermann := [ACKERMANN.INPUT]
 ENDIF
 m_n := ackermann.POP
 IF m_n[0] = 0
-  IF ackermann.LENGTH = 0
-    ACKERMANN.RETURN(m_n[1]+1)
-  ENDIF
-  prev_m_n := ackermann.POP
-  prev_m_n.PUSH m_n[1]+1
-  ackermann.PUSH prev_m_n
+ IF ackermann.LENGTH = 0
+  ACKERMANN.RETURN(m_n[1]+1)
+ ENDIF
+ prev_m_n := ackermann.POP
+ prev_m_n.PUSH m_n[1]+1
+ ackermann.PUSH prev_m_n
 ELSIF m_n[1] = 0
-  m_n[0] -= 1
-  m_n[1] := 1
-  ackermann.PUSH m_n
+ m_n[0] -= 1
+ m_n[1] := 1
+ ackermann.PUSH m_n
 ELSE
-  ackermann.PUSH [m_n[0]-1]
-  m_n[1] -= 1
-  ackermann.PUSH m_n
+ ackermann.PUSH [m_n[0]-1]
+ m_n[1] -= 1
+ ackermann.PUSH m_n
 ENDIF
