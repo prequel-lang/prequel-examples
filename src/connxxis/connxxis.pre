@@ -5,12 +5,12 @@ IF incrIdxs IS UNDEFINED
  REPEAT n
   i := incrIdxs.LENGTH
   c := CONNXXIS.HISCORE.INCR.COUNT(i)
-  LOG "++ " i " " c
+  DEBUGL "++ " i " " c
   incrIdxs.PUSH 0
  ENDREP
  iidx := 0
  ilen := CONNXXIS.HISCORE.INCR.COUNT(iidx)
- LOG iidx " " incrIdxs[iidx] " " ilen
+ DEBUGL iidx " " incrIdxs[iidx] " " ilen
  wmin := 0
  hnow := 1
  hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
@@ -23,7 +23,7 @@ IF CONNXXIS.HISCORE.INCR.INDEX >= incrIdxs.LENGTH
  REPEAT n
   i := incrIdxs.LENGTH
   c := CONNXXIS.HISCORE.INCR.COUNT(i)
-  LOG "++ " i " " c
+  DEBUGL "++ " i " " c
   incrIdxs.PUSH 0
  ENDREP
 ENDIF
@@ -70,7 +70,7 @@ IF stack.LENGTH > 0
 ENDIF
 incrIdxs[iidx]++
 IF incrIdxs[iidx] < ilen
- LOG iidx " " incrIdxs[iidx] " " ilen
+ DEBUGL iidx " " incrIdxs[iidx] " " ilen
  wmin := 0
  hnow := 1
  hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
@@ -84,7 +84,7 @@ ELSE
  IF iidx < CONNXXIS.HISCORE.INCR.INDEX
   iidx++
   ilen := CONNXXIS.HISCORE.INCR.COUNT(iidx)
-  LOG iidx " " incrIdxs[iidx] " " ilen
+  DEBUGL iidx " " incrIdxs[iidx] " " ilen
   wmin := 0
   hnow := 1
   hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
@@ -95,10 +95,10 @@ ELSE
 ENDIF
 wmin++
 IF wmin <= 24*60
- LOG "wait:" wmin
+ DEBUGL "wait:" wmin
  CONNXXIS.WAIT(60)
 ENDIF
-LOG "halt"
+DEBUGL "halt"
 CONNXXIS.HALT()
 
 @GET_ROTATIONS:
