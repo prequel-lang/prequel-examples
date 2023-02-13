@@ -2,6 +2,6 @@
 n := FACTORIAL.INPUT
 result := 1
 REPEAT n
-  result *= n+1
+ result *= n+1
 ENDREP
 FACTORIAL.RETURN(result)
