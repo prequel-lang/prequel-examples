@@ -3,19 +3,19 @@
 #  https://github.com/pimoroni/blinkt/blob/master/examples/rainbow.py
 
 IF spacing IS UNDEFINED
- spacing := 3600 / 16
- BLINKP.SET_BRIGHTNESS(1)
+ spacing := 360 / 16
+ BLINKP.SET_BRIGHTNESS(0.1)
 ENDIF
-hue := BLINKP.ELAPSED_TIME % 3600
+hue := (BLINKP.ELAPSED_TIME*100) % 360
 n := 8
 REPEAT n
  x := 8-n-1
  offset := x * spacing
- h := (((hue + offset) % 3600) * BLINKP.COLOR_UNIT) / 3600
- r, g, b := BLINKP.HSV_TO_RGB(h, BLINKP.COLOR_UNIT, BLINKP.COLOR_UNIT)
- r := (r * 255) / BLINKP.COLOR_UNIT
- g := (g * 255) / BLINKP.COLOR_UNIT
- b := (b * 255) / BLINKP.COLOR_UNIT
+ h := ((hue + offset) % 360) / 360
+ r, g, b := BLINKP.HSV_TO_RGB(h, 1.0, 1.0)
+ r := ROUND(r * 255)
+ g := ROUND(g * 255)
+ b := ROUND(b * 255)
  BLINKP.SET_PIXEL(x, r, g, b)
 ENDREP
-BLINKP.SHOW_AND_WAIT(1)
+BLINKP.SHOW_AND_WAIT(0.001)
