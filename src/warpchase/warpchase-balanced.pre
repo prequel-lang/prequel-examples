@@ -1,8 +1,8 @@
 @CombinedStrategies:
-oneRad := FXP.PI2/360
+oneRad := PI*2/360
 MODULE.CALL(&_, @PowerSeeker)
 predatorIndex := MODULE.CALL(@GetNearestPredatorIndex)
-IF predatorIndex >= 0 AND (DISTANCE_R.PLAYER[predatorIndex] <= WARP.MIN/2 OR BEARING.PLAYER.PLAYER[predatorIndex][MY.INDEX] <= 15*oneRad)
+IF predatorIndex >= 0 AND (DISTANCE_R.PLAYER[predatorIndex] <= MIN(WARP.X, WARP.Y)/2 OR BEARING.PLAYER.PLAYER[predatorIndex][MY.INDEX] <= 15*oneRad)
  MODULE.CALL(&_, @RunAway, predatorIndex)
 ENDIF
 MODULE.CALL(&_, @Predator, PLAYERS.SCORE[MY.INDEX])
@@ -14,7 +14,7 @@ WARPCHASE.DEACTIVATE()
 
 @PowerSeeker:
 IF INDEXES.POWERS.LENGTH > 0
- oneRad := FXP.PI2/360
+ oneRad := PI*2/360
  IF BEARING.POWER[INDEXES.POWERS[0]] <= 15*oneRad
   WARPCHASE.ACTIVATE()
  ENDIF
@@ -37,7 +37,7 @@ MODULE.RETURN(predatorIndex)
 @RunAway:
 predatorIndex := MODULE.CALL.ARGS[0]
 IF predatorIndex >= 0
- oneRad := FXP.PI2/360
+ oneRad := PI*2/360
  IF BEARING.PLAYER[predatorIndex] >= 90*oneRad AND BEARING.PLAYER[predatorIndex] <= 135*oneRad
   WARPCHASE.ACTIVATE()
  ENDIF
@@ -61,7 +61,7 @@ IF PLAYERS.REMAINING_POWER[MY.INDEX] > 0
   ENDIF
  ENDREP
  IF preyIndex >= 0
-  oneRad := FXP.PI2/360
+  oneRad := PI*2/360
   IF BEARING.PLAYER[preyIndex] <= 15*oneRad
    WARPCHASE.ACTIVATE()
   ENDIF
@@ -71,7 +71,7 @@ MODULE.RETURN(0)
 
 @Greedy:
 IF INDEXES.POINTS.LENGTH > 0
- oneRad := FXP.PI2/360
+ oneRad := PI*2/360
  IF BEARING.POINT[INDEXES.POINTS[0]] <= 15*oneRad
   IF PLAYERS.REMAINING_POWER[MY.INDEX] > 0
    isBlocked := MODULE.CALL(@CheckTeamBlock, DISTANCE_R.POINT[0])
@@ -87,6 +87,7 @@ MODULE.RETURN(0)
 
 @CheckTeamBlock:
 distance := MODULE.CALL.ARGS[0]
+oneRad := PI*2/360
 isBlocked := 0
 r := INDEXES.PLAYERS.TEAM.LENGTH
 l := r
@@ -95,7 +96,7 @@ REPEAT r
  IF PLAYERS.REMAINING_SHIELD[pidx] > 0 OR PLAYERS.REMAINING_INACTIVE[pidx] > 0 OR DISTANCE_R.PLAYER[pidx] >= distance
   REPNEXT
  ENDIF
- IF BEARING.PLAYER[pidx] < 90
+ IF BEARING.PLAYER[pidx] < 90*oneRad
   REPNEXT
  ENDIF
  isBlocked := 1
