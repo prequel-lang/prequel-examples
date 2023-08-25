@@ -6,7 +6,7 @@ IF spacing IS UNDEFINED
  spacing := 360 / 16
  BLINKP.SET_BRIGHTNESS(0.1)
 ENDIF
-hue := (BLINKP.ELAPSED_TIME*100) % 360
+hue := ((BLINKP.ELAPSED_TIME%60)*100) % 360
 n := 8
 REPEAT n
  x := 8-n-1
