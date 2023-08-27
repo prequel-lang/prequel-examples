@@ -1,143 +1,143 @@
-@SEARCH_NEAR_BEST_KNOWN:
-IF incrIdxs IS UNDEFINED
- incrIdxs := []
- n := CONNXXIS.HISCORE.INCR.INDEX+1
- REPEAT n
-  i := incrIdxs.LENGTH
-  c := CONNXXIS.HISCORE.INCR.COUNT(i)
-  DEBUGL "++ " i " " c
-  incrIdxs.PUSH 0
- ENDREP
+@search_near_best_known:
+if incr_idxs is undefined
+ incr_idxs := []
+ n := connxxis.hiscore.incr.index+1
+ repeat n
+  i := incr_idxs.length
+  c := connxxis.hiscore.incr.count(i)
+  debugl "++ " i " " c
+  incr_idxs.push 0
+ endrep
  iidx := 0
- ilen := CONNXXIS.HISCORE.INCR.COUNT(iidx)
- DEBUGL iidx " " incrIdxs[iidx] " " ilen
+ ilen := connxxis.hiscore.incr.count(iidx)
+ debugl iidx " " incr_idxs[iidx] " " ilen
  wmin := 0
  hnow := 1
- hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
- hvts := hiscore[CONNXXIS.INDEX.VERTEX.TILE]
- htrs := hiscore[CONNXXIS.INDEX.TILE.ROTATION]
- CONNXXIS.SETUP.TILES(hvts, htrs)
-ENDIF
-IF CONNXXIS.HISCORE.INCR.INDEX >= incrIdxs.LENGTH
- n := CONNXXIS.HISCORE.INCR.INDEX+1-incrIdxs.LENGTH
- REPEAT n
-  i := incrIdxs.LENGTH
-  c := CONNXXIS.HISCORE.INCR.COUNT(i)
-  DEBUGL "++ " i " " c
-  incrIdxs.PUSH 0
- ENDREP
-ENDIF
-IF hnow = 1
+ hiscore := connxxis.hiscore.incr(iidx, incr_idxs[iidx])
+ hvts := hiscore[connxxis.index.vertex.tile]
+ htrs := hiscore[connxxis.index.tile.rotation]
+ connxxis.setup.tiles(hvts, htrs)
+endif
+if connxxis.hiscore.incr.index >= incr_idxs.length
+ n := connxxis.hiscore.incr.index+1-incr_idxs.length
+ repeat n
+  i := incr_idxs.length
+  c := connxxis.hiscore.incr.count(i)
+  debugl "++ " i " " c
+  incr_idxs.push 0
+ endrep
+endif
+if hnow = 1
  hnow := 0
  stack := []
- v := CONNXXIS.COUNT.VERTEX
- REPEAT v
-  n := CONNXXIS.COUNT.VERTEX
-  REPEAT n
-   IF v = n
-    REPNEXT
-   ENDIF
+ v := connxxis.count.vertex
+ repeat v
+  n := connxxis.count.vertex
+  repeat n
+   if v = n
+    repnext
+   endif
    info := [v, n, []]
-   info[2] := CALL(@GET_ROTATIONS, v, n)
-   stack.QUEUE info
-  ENDREP
- ENDREP
- info := stack.UNQUEUE
- v := info.UNQUEUE
- u := info.UNQUEUE
- rotations := info.UNQUEUE
- undoMove := 0
- CONNXXIS.MOVE(CONNXXIS.VERTEX.TILE[u], v)
-ENDIF
-IF rotations.LENGTH > 0
- rotation := rotations.UNQUEUE
- tileRotations := CONNXXIS.TILE.ROTATION
- tileRotations[CONNXXIS.VERTEX.TILE[u]] := rotation[0]
- tileRotations[CONNXXIS.VERTEX.TILE[v]] := rotation[1]
- CONNXXIS.SETUP.TILES(CONNXXIS.VERTEX.TILE, tileRotations)
-ENDIF
-IF undoMove = 0
- undoMove := 1
- CONNXXIS.MOVE(CONNXXIS.VERTEX.TILE[u], v)
-ENDIF
-IF stack.LENGTH > 0
- info := stack.UNQUEUE
- v := info.UNQUEUE
- u := info.UNQUEUE
- rotations := info.UNQUEUE
- undoMove := 0
- CONNXXIS.MOVE(CONNXXIS.VERTEX.TILE[u], v)
-ENDIF
-incrIdxs[iidx]++
-IF incrIdxs[iidx] < ilen
- DEBUGL iidx " " incrIdxs[iidx] " " ilen
+   info[2] := call(@get_rotations, v, n)
+   stack.queue info
+  endrep
+ endrep
+ info := stack.unqueue
+ v := info.unqueue
+ u := info.unqueue
+ rotations := info.unqueue
+ undo_move := 0
+ connxxis.move(connxxis.vertex.tile[u], v)
+endif
+if rotations.length > 0
+ rotation := rotations.unqueue
+ tile_rotations := connxxis.tile.rotation
+ tile_rotations[connxxis.vertex.tile[u]] := rotation[0]
+ tile_rotations[connxxis.vertex.tile[v]] := rotation[1]
+ connxxis.setup.tiles(connxxis.vertex.tile, tile_rotations)
+endif
+if undo_move = 0
+ undo_move := 1
+ connxxis.move(connxxis.vertex.tile[u], v)
+endif
+if stack.length > 0
+ info := stack.unqueue
+ v := info.unqueue
+ u := info.unqueue
+ rotations := info.unqueue
+ undo_move := 0
+ connxxis.move(connxxis.vertex.tile[u], v)
+endif
+incr_idxs[iidx]++
+if incr_idxs[iidx] < ilen
+ debugl iidx " " incr_idxs[iidx] " " ilen
  wmin := 0
  hnow := 1
- hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
- hvts := hiscore[CONNXXIS.INDEX.VERTEX.TILE]
- htrs := hiscore[CONNXXIS.INDEX.TILE.ROTATION]
- CONNXXIS.SETUP.TILES(hvts, htrs)
-ELSE
- IF incrIdxs[iidx] > ilen
-  incrIdxs[iidx] := ilen
- ENDIF
- IF iidx < CONNXXIS.HISCORE.INCR.INDEX
+ hiscore := connxxis.hiscore.incr(iidx, incr_idxs[iidx])
+ hvts := hiscore[connxxis.index.vertex.tile]
+ htrs := hiscore[connxxis.index.tile.rotation]
+ connxxis.setup.tiles(hvts, htrs)
+else
+ if incr_idxs[iidx] > ilen
+  incr_idxs[iidx] := ilen
+ endif
+ if iidx < connxxis.hiscore.incr.index
   iidx++
-  ilen := CONNXXIS.HISCORE.INCR.COUNT(iidx)
-  DEBUGL iidx " " incrIdxs[iidx] " " ilen
+  ilen := connxxis.hiscore.incr.count(iidx)
+  debugl iidx " " incr_idxs[iidx] " " ilen
   wmin := 0
   hnow := 1
-  hiscore := CONNXXIS.HISCORE.INCR(iidx, incrIdxs[iidx])
-  hvts := hiscore[CONNXXIS.INDEX.VERTEX.TILE]
-  htrs := hiscore[CONNXXIS.INDEX.TILE.ROTATION]
-  CONNXXIS.SETUP.TILES(hvts, htrs)
- ENDIF
-ENDIF
+  hiscore := connxxis.hiscore.incr(iidx, incr_idxs[iidx])
+  hvts := hiscore[connxxis.index.vertex.tile]
+  htrs := hiscore[connxxis.index.tile.rotation]
+  connxxis.setup.tiles(hvts, htrs)
+ endif
+endif
 wmin++
-IF wmin <= 24*60
- DEBUGL "wait:" wmin
- CONNXXIS.WAIT(60)
-ENDIF
-DEBUGL "halt"
-CONNXXIS.HALT()
+if wmin <= 24*60
+ debugl "wait:" wmin
+ connxxis.wait(60)
+endif
+debugl "halt"
+connxxis.halt()
 
-@GET_ROTATIONS:
-v := CALL.ARGS[0]
-u := CALL.ARGS[1]
-areAdjacent := CALL(@ARE_ADJACENT, v, u)
-vtr := CONNXXIS.TILE.ROTATION[CONNXXIS.VERTEX.TILE[v]]
-utr := CONNXXIS.TILE.ROTATION[CONNXXIS.VERTEX.TILE[u]]
+@get_rotations:
+v := call.args[0]
+u := call.args[1]
+are_adjacent := call(@are_adjacent, v, u)
+vtr := connxxis.tile.rotation[connxxis.vertex.tile[v]]
+utr := connxxis.tile.rotation[connxxis.vertex.tile[u]]
 rotations := []
-IF areAdjacent = 1
+if are_adjacent = 1
  n := 6
- REPEAT n
+ repeat n
   m := 6
-  REPEAT m
-   rotations.QUEUE [(vtr+n)%6, (utr+m)%6]
-  ENDREP
- ENDREP
- rotz := rotations.UNQUEUE
- rotations.PUSH rotz
-ELSE
+  repeat m
+   rotations.queue [(vtr+n)%6, (utr+m)%6]
+  endrep
+ endrep
+ rotz := rotations.unqueue
+ rotations.push rotz
+else
  n := 5
- REPEAT n
-  rotations.QUEUE [(vtr+n+1)%6, utr]
- ENDREP
+ repeat n
+  rotations.queue [(vtr+n+1)%6, utr]
+ endrep
  n := 5
- REPEAT n
-  rotations.QUEUE [vtr, (utr+n+1)%6]
- ENDREP
- rotations.PUSH [vtr, utr]
-ENDIF
-RETURN(rotations)
+ repeat n
+  rotations.queue [vtr, (utr+n+1)%6]
+ endrep
+ rotations.push [vtr, utr]
+endif
+return(rotations)
 
-@ARE_ADJACENT:
-v := CALL.ARGS[0]
-u := CALL.ARGS[1]
-n := CONNXXIS.COUNT.FACE
-REPEAT n
- IF CONNXXIS.VERTEX.FACE.VERTEX[v][n] = u
-  RETURN(1)
- ENDIF
-ENDREP
-RETURN(0)
+@are_adjacent:
+v := call.args[0]
+u := call.args[1]
+n := connxxis.count.face
+repeat n
+ if connxxis.vertex.face.vertex[v][n] = u
+  return(1)
+ endif
+endrep
+return(0)

@@ -1,15 +1,15 @@
-@LISTSORT:
-n := LISTSORT.INPUT.LENGTH
-REPEAT n   # go down to find an out-of-order element
- IF LISTSORT.INPUT[n-1] > LISTSORT.INPUT[n]
-  r := LISTSORT.INPUT.LENGTH-1-n
+@listsort:
+n := listsort.input.length
+repeat n   # go down to find an out-of-order element
+ if listsort.input[n-1] > listsort.input[n]
+  r := listsort.input.length-1-n
   i := r
-  REPEAT i # go up to find its proper place
-   IF LISTSORT.INPUT[n-1] < LISTSORT.INPUT[n+r-i]
+  repeat i # go up to find its proper place
+   if listsort.input[n-1] < listsort.input[n+r-i]
     r--  # move from n-1 to n+r-i-1
-    REPSTOP
-   ENDIF
-  ENDREP
-  LISTSORT.MOVE(n-1, n+r-i)
- ENDIF
-ENDREP
+    repstop
+   endif
+  endrep
+  listsort.move(n-1, n+r-i)
+ endif
+endrep

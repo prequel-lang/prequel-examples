@@ -1,21 +1,21 @@
-@Rainbow:
+@rainbow:
 # ported and adapted from:
 #  https://github.com/pimoroni/blinkt/blob/master/examples/rainbow.py
 
-IF spacing IS UNDEFINED
- BLINKP.SET_BRIGHTNESS(0.1)
+if spacing is undefined
+ blinkp.set_brightness(0.1)
  spacing := 360 / 16
-ENDIF
-hue := ((BLINKP.ELAPSED_TIME%60)*100) % 360
-n := BLINKP.NUM_PIXELS
-REPEAT n
- x := BLINKP.NUM_PIXELS-n-1
+endif
+hue := ((blinkp.elapsed_time%60)*100) % 360
+n := blinkp.num_pixels
+repeat n
+ x := blinkp.num_pixels-n-1
  offset := x * spacing
  h := ((hue + offset) % 360) / 360
- r, g, b := BLINKP.HSV_TO_RGB(h, 1.0, 1.0)
- r := MATH.ROUND(r * 255)
- g := MATH.ROUND(g * 255)
- b := MATH.ROUND(b * 255)
- BLINKP.SET_PIXEL(x, r, g, b)
-ENDREP
-BLINKP.SHOW_AND_WAIT(0.001)
+ r, g, b := blinkp.hsv_to_rgb(h, 1.0, 1.0)
+ r := math.round(r * 255)
+ g := math.round(g * 255)
+ b := math.round(b * 255)
+ blinkp.set_pixel(x, r, g, b)
+endrep
+blinkp.show_and_wait(0.001)

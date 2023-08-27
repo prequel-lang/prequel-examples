@@ -1,12 +1,12 @@
-@Getting_Started:
+@getting_started:
 # ported and adapted from:
 #  https://learn.pimoroni.com/tutorial/sandyj/getting-started-with-blinkt
 
-IF i IS UNDEFINED
- BLINKP.SET_BRIGHTNESS(0.1)
+if i is undefined
+ blinkp.set_brightness(0.1)
  i := 0
-ENDIF
-BLINKP.CLEAR()
-BLINKP.SET_PIXEL(i, 255, 0, 0)
-i := (i+1) % BLINKP.NUM_PIXELS
-BLINKP.SHOW_AND_WAIT(0.05)
+endif
+blinkp.clear()
+blinkp.set_pixel(i, 255, 0, 0)
+i := (i+1) % blinkp.num_pixels
+blinkp.show_and_wait(0.05)

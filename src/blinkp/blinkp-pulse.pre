@@ -1,54 +1,54 @@
-@Pulse:
-IF spacing IS UNDEFINED
- spacing := 360 / BLINKP.NUM_PIXELS
+@pulse:
+if spacing is undefined
+ spacing := 360 / blinkp.num_pixels
  hue := 0
  pixels_data := []
- n := BLINKP.NUM_PIXELS
- REPEAT n
-  x := BLINKP.NUM_PIXELS-n-1
+ n := blinkp.num_pixels
+ repeat n
+  x := blinkp.num_pixels-n-1
   h := ((hue + x*spacing) % 360) / 360
-  r, g, b := BLINKP.HSV_TO_RGB(h, 1.0, 1.0)
-  r := MATH.ROUND(r * 255)
-  g := MATH.ROUND(g * 255)
-  b := MATH.ROUND(b * 255)
-  pixels_data.PUSH [r, g, b, 1]
-  BLINKP.SET_PIXEL(x, pixels_data[x][0], pixels_data[x][1], pixels_data[x][2], pixels_data[x][3]/10)
- ENDREP
+  r, g, b := blinkp.hsv_to_rgb(h, 1.0, 1.0)
+  r := math.round(r * 255)
+  g := math.round(g * 255)
+  b := math.round(b * 255)
+  pixels_data.push [r, g, b, 1]
+  blinkp.set_pixel(x, pixels_data[x][0], pixels_data[x][1], pixels_data[x][2], pixels_data[x][3]/10)
+ endrep
  max_brightness := 10
  goal :~ max_brightness
  goal += 1
  dir := 1
- delay := 1 / BLINKP.NUM_PIXELS
-ENDIF
-n := pixels_data.LENGTH-1
-REPEAT n
+ delay := 1 / blinkp.num_pixels
+endif
+n := pixels_data.length-1
+repeat n
  pixels_data[n+1][3] := pixels_data[n][3]
-ENDREP
+endrep
 brightness := pixels_data[0][3]
 incr :~ max_brightness*3/10
 brightness += incr * dir
-IF dir > 0
- IF brightness >= goal
+if dir > 0
+ if brightness >= goal
   brightness := goal
   goal :~ max_brightness
   goal += 1
-  IF goal < brightness
+  if goal < brightness
    dir *= -1
-  ENDIF
- ENDIF
-ELSE
- IF brightness <= goal
+  endif
+ endif
+else
+ if brightness <= goal
   brightness := goal
   goal :~ max_brightness
   goal += 1
-  IF goal > brightness
+  if goal > brightness
    dir *= -1
-  ENDIF
- ENDIF
-ENDIF
+  endif
+ endif
+endif
 pixels_data[0][3] := brightness
-n := BLINKP.NUM_PIXELS
-REPEAT n
- BLINKP.SET_PIXEL(n, pixels_data[n][0], pixels_data[n][1], pixels_data[n][2], pixels_data[n][3]/10)
-ENDREP
-BLINKP.SHOW_AND_WAIT(delay)
+n := blinkp.num_pixels
+repeat n
+ blinkp.set_pixel(n, pixels_data[n][0], pixels_data[n][1], pixels_data[n][2], pixels_data[n][3]/10)
+endrep
+blinkp.show_and_wait(delay)

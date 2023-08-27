@@ -1,7 +1,7 @@
-@FACTORIAL:
-n := FACTORIAL.INPUT
+@factorial:
+n := factorial.input
 result := 1
-REPEAT n
+repeat n
  result *= n+1
-ENDREP
-FACTORIAL.RETURN(result)
+endrep
+factorial.return(result)

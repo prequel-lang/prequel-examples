@@ -1,21 +1,21 @@
-@PLEDGE_ALGORITHM:
-IF totalTurns IS UNDEFINED
- totalTurns := 0
- forceForward := 0
-ENDIF
-IF forceForward = 1
- forceForward := 0
- MAZE.MOVE.FORWARD()
-ELSIF totalTurns = 0
- IF MAZE.CAN.MOVE.FORWARD = 1
-  MAZE.MOVE.FORWARD()
- ENDIF
-ELSIF MAZE.CAN.MOVE.RIGHT = 1
- forceForward := 1
- totalTurns -= 1
- MAZE.TURN.RIGHT()
-ELSIF MAZE.CAN.MOVE.FORWARD = 1
- MAZE.MOVE.FORWARD()
-ENDIF
-totalTurns += 1
-MAZE.TURN.LEFT()
+@pledge_algorithm:
+if total_turns is undefined
+ total_turns := 0
+ force_forward := 0
+endif
+if force_forward = 1
+ force_forward := 0
+ maze.move.forward()
+elsif total_turns = 0
+ if maze.can.move.forward = 1
+  maze.move.forward()
+ endif
+elsif maze.can.move.right = 1
+ force_forward := 1
+ total_turns -= 1
+ maze.turn.right()
+elsif maze.can.move.forward = 1
+ maze.move.forward()
+endif
+total_turns += 1
+maze.turn.left()

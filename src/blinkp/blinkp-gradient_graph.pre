@@ -2,30 +2,30 @@
 # ported and adapted from:
 #  https://github.com/pimoroni/blinkt/blob/master/examples/gradient_graph.py
 
-IF hue_range IS UNDEFINED
+if hue_range is undefined
  hue_range := 120
  hue_start := 0
  max_brightness := 0.2
-ENDIF
+endif
 
-t := BLINKP.ELAPSED_TIME * 2
-v := (MATH.SIN(t) + 1) / 2  # Get a value between 0 and 1
-CALL(@set_graph, v)
-BLINKP.SHOW_AND_WAIT(0.01)
+t := blinkp.elapsed_time * 2
+v := (math.sin(t) + 1) / 2  # get a value between 0 and 1
+call(@set_graph, v)
+blinkp.show_and_wait(0.01)
 
 @set_graph:
-v := call.args[0] * BLINKP.NUM_PIXELS
-n := BLINKP.NUM_PIXELS
-REPEAT n
- x := BLINKP.NUM_PIXELS-n-1
- hue := ((!hue_start + ((x / BLINKP.NUM_PIXELS) * !hue_range)) % 360) / 360
- r, g, b := BLINKP.HSV_TO_RGB(hue, 1.0, 1.0)
- r := MATH.ROUND(r * 255)
- g := MATH.ROUND(g * 255)
- b := MATH.ROUND(b * 255)
- brightness := MATH.MAX(0.0, MATH.MIN(v, 1.0)) * !max_brightness
+v := call.args[0] * blinkp.num_pixels
+n := blinkp.num_pixels
+repeat n
+ x := blinkp.num_pixels-n-1
+ hue := ((!hue_start + ((x / blinkp.num_pixels) * !hue_range)) % 360) / 360
+ r, g, b := blinkp.hsv_to_rgb(hue, 1.0, 1.0)
+ r := math.round(r * 255)
+ g := math.round(g * 255)
+ b := math.round(b * 255)
+ brightness := math.max(0.0, math.min(v, 1.0)) * !max_brightness
 
- BLINKP.SET_PIXEL(x, r, g, b, brightness)
+ blinkp.set_pixel(x, r, g, b, brightness)
  v -= 1
-ENDREP
-RETURN()
+endrep
+return()
