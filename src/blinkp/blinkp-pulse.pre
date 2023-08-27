@@ -8,9 +8,9 @@ IF spacing IS UNDEFINED
   x := BLINKP.NUM_PIXELS-n-1
   h := ((hue + x*spacing) % 360) / 360
   r, g, b := BLINKP.HSV_TO_RGB(h, 1.0, 1.0)
-  r := ROUND(r * 255)
-  g := ROUND(g * 255)
-  b := ROUND(b * 255)
+  r := MATH.ROUND(r * 255)
+  g := MATH.ROUND(g * 255)
+  b := MATH.ROUND(b * 255)
   pixels_data.PUSH [r, g, b, 1]
   BLINKP.SET_PIXEL(x, pixels_data[x][0], pixels_data[x][1], pixels_data[x][2], pixels_data[x][3]/10)
  ENDREP
