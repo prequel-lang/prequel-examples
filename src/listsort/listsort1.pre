@@ -1,7 +1,7 @@
-@LISTSORT:
-n := LISTSORT.INPUT.LENGTH
-REPEAT n
- IF LISTSORT.INPUT[n-1] > LISTSORT.INPUT[n]
-  LISTSORT.MOVE(n-1, n)
- ENDIF
-ENDREP
+@listsort:
+n := listsort.input.length
+repeat n
+ if listsort.input[n-1] > listsort.input[n]
+  listsort.move(n-1, n)
+ endif
+endrep

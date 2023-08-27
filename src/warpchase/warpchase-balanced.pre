@@ -1,100 +1,100 @@
-@CombinedStrategies:
-oneRad := MATH.PI/180
-CALL(&_, @PowerSeeker)
-predatorIndex := CALL(@GetNearestPredatorIndex)
-IF predatorIndex >= 0 AND (DISTANCE_R.PLAYER[predatorIndex] <= MATH.MIN(WARP.X, WARP.Y)/2 OR BEARING.PLAYER.PLAYER[predatorIndex][MY.INDEX] <= 15*!oneRad)
- CALL(&_, @RunAway, predatorIndex)
-ENDIF
-CALL(&_, @Predator, PLAYERS.SCORE[MY.INDEX])
-IF PLAYERS.SCORE[MY.INDEX] > 0
- CALL(&_, @RunAway, predatorIndex)
-ENDIF
-CALL(&_, @Greedy)
-WARPCHASE.DEACTIVATE()
+@combined_strategies:
+one_rad := math.pi/180
+call(&_, @power_seeker)
+predator_index := call(@get_nearest_predator_index)
+if predator_index >= 0 and (distance_r.player[predator_index] <= math.min(warp.x, warp.y)/2 or bearing.player.player[predator_index][my.index] <= 15*!one_rad)
+ call(&_, @run_away, predator_index)
+endif
+call(&_, @predator, players.score[my.index])
+if players.score[my.index] > 0
+ call(&_, @run_away, predator_index)
+endif
+call(&_, @greedy)
+warpchase.deactivate()
 
-@PowerSeeker:
-IF INDEXES.POWERS.LENGTH > 0
- IF BEARING.POWER[INDEXES.POWERS[0]] <= 15*!oneRad
-  WARPCHASE.ACTIVATE()
- ENDIF
-ENDIF
-RETURN(0)
+@power_seeker:
+if indexes.powers.length > 0
+ if bearing.power[indexes.powers[0]] <= 15*!one_rad
+  warpchase.activate()
+ endif
+endif
+return(0)
 
-@GetNearestPredatorIndex:
-predatorIndex := -1
-r := INDEXES.PLAYERS.OTHERS.LENGTH
+@get_nearest_predator_index:
+predator_index := -1
+r := indexes.players.others.length
 l := r
-REPEAT r
- pidx := INDEXES.PLAYERS.OTHERS[l-r-1]
- IF PLAYERS.REMAINING_POWER[pidx] > 0
-  predatorIndex := pidx
-  REPSTOP
- ENDIF
-ENDREP
-RETURN(predatorIndex)
+repeat r
+ pidx := indexes.players.others[l-r-1]
+ if players.remaining_power[pidx] > 0
+  predator_index := pidx
+  repstop
+ endif
+endrep
+return(predator_index)
 
-@RunAway:
-predatorIndex := CALL.ARGS[0]
-IF predatorIndex >= 0
- IF BEARING.PLAYER[predatorIndex] >= 90*!oneRad AND BEARING.PLAYER[predatorIndex] <= 135*!oneRad
-  WARPCHASE.ACTIVATE()
- ENDIF
-ENDIF
-RETURN(0)
+@run_away:
+predator_index := call.args[0]
+if predator_index >= 0
+ if bearing.player[predator_index] >= 90*!one_rad and bearing.player[predator_index] <= 135*!one_rad
+  warpchase.activate()
+ endif
+endif
+return(0)
 
-@Predator:
-IF PLAYERS.REMAINING_POWER[MY.INDEX] > 0
- score := CALL.ARGS[0]
- preyIndex := -1
- r := INDEXES.PLAYERS.OTHERS.LENGTH
+@predator:
+if players.remaining_power[my.index] > 0
+ score := call.args[0]
+ prey_index := -1
+ r := indexes.players.others.length
  l := r
- REPEAT r
-  pidx := INDEXES.PLAYERS.OTHERS[l-r-1]
-  IF PLAYERS.SCORE[pidx] > 0 AND PLAYERS.SCORE[pidx] >= score AND PLAYERS.REMAINING_POWER[pidx] = 0 AND PLAYERS.REMAINING_SHIELD[pidx] = 0 AND PLAYERS.REMAINING_INACTIVE[pidx] = 0
-   isBlocked := CALL(@CheckTeamBlock, DISTANCE_R.PLAYER[pidx])
-   IF isBlocked = 0
-    preyIndex := pidx
-    REPSTOP
-   ENDIF
-  ENDIF
- ENDREP
- IF preyIndex >= 0
-  IF BEARING.PLAYER[preyIndex] <= 15*!oneRad
-   WARPCHASE.ACTIVATE()
-  ENDIF
- ENDIF
-ENDIF
-RETURN(0)
+ repeat r
+  pidx := indexes.players.others[l-r-1]
+  if players.score[pidx] > 0 and players.score[pidx] >= score and players.remaining_power[pidx] = 0 and players.remaining_shield[pidx] = 0 and players.remaining_inactive[pidx] = 0
+   is_blocked := call(@check_team_block, distance_r.player[pidx])
+   if is_blocked = 0
+    prey_index := pidx
+    repstop
+   endif
+  endif
+ endrep
+ if prey_index >= 0
+  if bearing.player[prey_index] <= 15*!one_rad
+   warpchase.activate()
+  endif
+ endif
+endif
+return(0)
 
-@Greedy:
-IF INDEXES.POINTS.LENGTH > 0
- IF BEARING.POINT[INDEXES.POINTS[0]] <= 15*!oneRad
-  IF PLAYERS.REMAINING_POWER[MY.INDEX] > 0
-   isBlocked := CALL(@CheckTeamBlock, DISTANCE_R.POINT[0])
-   IF isBlocked = 0
-    WARPCHASE.ACTIVATE()
-   ENDIF
-  ELSE
-   WARPCHASE.ACTIVATE()
-  ENDIF
- ENDIF
-ENDIF
-RETURN(0)
+@greedy:
+if indexes.points.length > 0
+ if bearing.point[indexes.points[0]] <= 15*!one_rad
+  if players.remaining_power[my.index] > 0
+   is_blocked := call(@check_team_block, distance_r.point[0])
+   if is_blocked = 0
+    warpchase.activate()
+   endif
+  else
+   warpchase.activate()
+  endif
+ endif
+endif
+return(0)
 
-@CheckTeamBlock:
-distance := CALL.ARGS[0]
-isBlocked := 0
-r := INDEXES.PLAYERS.TEAM.LENGTH
+@check_team_block:
+distance := call.args[0]
+is_blocked := 0
+r := indexes.players.team.length
 l := r
-REPEAT r
- pidx := INDEXES.PLAYERS.TEAM[l-r-1]
- IF PLAYERS.REMAINING_SHIELD[pidx] > 0 OR PLAYERS.REMAINING_INACTIVE[pidx] > 0 OR DISTANCE_R.PLAYER[pidx] >= distance
-  REPNEXT
- ENDIF
- IF BEARING.PLAYER[pidx] < 90*!oneRad
-  REPNEXT
- ENDIF
- isBlocked := 1
- REPSTOP
-ENDREP
-RETURN(isBlocked)
+repeat r
+ pidx := indexes.players.team[l-r-1]
+ if players.remaining_shield[pidx] > 0 or players.remaining_inactive[pidx] > 0 or distance_r.player[pidx] >= distance
+  repnext
+ endif
+ if bearing.player[pidx] < 90*!one_rad
+  repnext
+ endif
+ is_blocked := 1
+ repstop
+endrep
+return(is_blocked)

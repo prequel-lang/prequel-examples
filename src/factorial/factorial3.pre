@@ -1,11 +1,11 @@
-@MAIN:
-result := CALL(@FACTORIAL, FACTORIAL.INPUT)
-FACTORIAL.RETURN(result)
+@main:
+result := call(@factorial, factorial.input)
+factorial.return(result)
 
-@FACTORIAL:
-n := CALL.ARGS[0]
+@factorial:
+n := call.args[0]
 result := 1
-REPEAT n
+repeat n
  result *= n+1
-ENDREP
-RETURN(result)
+endrep
+return(result)

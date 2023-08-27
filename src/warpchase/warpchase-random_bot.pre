@@ -1,19 +1,19 @@
-@RandomBot:
-IF action IS UNDEFINED
+@random_bot:
+if action is undefined
  action := 1
- until_tick := TICKS.CURRENT
-ENDIF
-IF TICKS.CURRENT >= until_tick
- IF action = 1
-  r :~ 1*TICKS.PER_SECOND
- ELSE
-  r :~ 9*TICKS.PER_SECOND
-  r += 1*TICKS.PER_SECOND
- ENDIF
+ until_tick := ticks.current
+endif
+if ticks.current >= until_tick
+ if action = 1
+  r :~ 1*ticks.per_second
+ else
+  r :~ 9*ticks.per_second
+  r += 1*ticks.per_second
+ endif
  action := -1*(action-1)
- until_tick := TICKS.CURRENT+r+1
-ENDIF
-IF action = 1
- WARPCHASE.ACTIVATE()
-ENDIF
-WARPCHASE.DEACTIVATE()
+ until_tick := ticks.current+r+1
+endif
+if action = 1
+ warpchase.activate()
+endif
+warpchase.deactivate()

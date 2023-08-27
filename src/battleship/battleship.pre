@@ -1,5 +1,5 @@
-@BATTLESHIP:
-randomIndex :~ BATTLESHIP.HIDDEN.LENGTH
-row := BATTLESHIP.HIDDEN[randomIndex][0]
-col := BATTLESHIP.HIDDEN[randomIndex][1]
-BATTLESHIP.SHOOT(row, col)
+@battleship:
+random_index :~ battleship.hidden.length
+row := battleship.hidden[random_index][0]
+col := battleship.hidden[random_index][1]
+battleship.shoot(row, col)

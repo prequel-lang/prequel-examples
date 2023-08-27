@@ -1,8 +1,8 @@
-@Greedy:
-IF INDEXES.POINTS.LENGTH > 0
- oneRad := MATH.PI/180
- IF BEARING.POINT[INDEXES.POINTS[0]] <= 15*oneRad
-  WARPCHASE.ACTIVATE()
- ENDIF
-ENDIF
-WARPCHASE.DEACTIVATE()
+@greedy:
+if indexes.points.length > 0
+ one_rad := math.pi/180
+ if bearing.point[indexes.points[0]] <= 15*one_rad
+  warpchase.activate()
+ endif
+endif
+warpchase.deactivate()

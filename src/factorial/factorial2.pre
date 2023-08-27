@@ -1,10 +1,10 @@
-@FACTORIAL:
-IF n IS UNDEFINED
- n := FACTORIAL.INPUT
+@factorial:
+if n is undefined
+ n := factorial.input
  result := 1
-ENDIF
-IF n <= 1
- FACTORIAL.RETURN(result)
-ENDIF
+endif
+if n <= 1
+ factorial.return(result)
+endif
 result *= n
 n--

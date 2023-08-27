@@ -1,20 +1,20 @@
-@GreedyCoOp:
-n1 := INDEXES.POINTS.LENGTH
-REPEAT n1
- i1 := INDEXES.POINTS.LENGTH-n1-1
- min_dist := DISTANCE_R.POINT[INDEXES.POINTS[i1]]
- n2 := INDEXES.PLAYERS.TEAM.LENGTH
- REPEAT n2
-  IF min_dist > DISTANCE_R.PLAYER.POINT[INDEXES.PLAYERS.TEAM[n2]][INDEXES.POINTS[i1]]
-   min_dist := DISTANCE_R.PLAYER.POINT[INDEXES.PLAYERS.TEAM[n2]][INDEXES.POINTS[i1]]
-   REPSTOP
-  ENDIF
- ENDREP
- IF min_dist = DISTANCE_R.POINT[INDEXES.POINTS[i1]]
-  IF BEARING.POINT[INDEXES.POINTS[i1]] <= 15*MATH.PI/180
-   WARPCHASE.ACTIVATE()
-  ENDIF
-  WARPCHASE.DEACTIVATE()
- ENDIF
-ENDREP
-WARPCHASE.DEACTIVATE()
+@greedy_co_op:
+n1 := indexes.points.length
+repeat n1
+ i1 := indexes.points.length-n1-1
+ min_dist := distance_r.point[indexes.points[i1]]
+ n2 := indexes.players.team.length
+ repeat n2
+  if min_dist > distance_r.player.point[indexes.players.team[n2]][indexes.points[i1]]
+   min_dist := distance_r.player.point[indexes.players.team[n2]][indexes.points[i1]]
+   repstop
+  endif
+ endrep
+ if min_dist = distance_r.point[indexes.points[i1]]
+  if bearing.point[indexes.points[i1]] <= 15*math.pi/180
+   warpchase.activate()
+  endif
+  warpchase.deactivate()
+ endif
+endrep
+warpchase.deactivate()
