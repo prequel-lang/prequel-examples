@@ -38,7 +38,7 @@ IF hnow = 1
     REPNEXT
    ENDIF
    info := [v, n, []]
-   info[2] := MODULE.CALL(@GET_ROTATIONS, v, n)
+   info[2] := CALL(@GET_ROTATIONS, v, n)
    stack.QUEUE info
   ENDREP
  ENDREP
@@ -102,9 +102,9 @@ DEBUGL "halt"
 CONNXXIS.HALT()
 
 @GET_ROTATIONS:
-v := MODULE.CALL.ARGS[0]
-u := MODULE.CALL.ARGS[1]
-areAdjacent := MODULE.CALL(@ARE_ADJACENT, v, u)
+v := CALL.ARGS[0]
+u := CALL.ARGS[1]
+areAdjacent := CALL(@ARE_ADJACENT, v, u)
 vtr := CONNXXIS.TILE.ROTATION[CONNXXIS.VERTEX.TILE[v]]
 utr := CONNXXIS.TILE.ROTATION[CONNXXIS.VERTEX.TILE[u]]
 rotations := []
@@ -129,15 +129,15 @@ ELSE
  ENDREP
  rotations.PUSH [vtr, utr]
 ENDIF
-MODULE.RETURN(rotations)
+RETURN(rotations)
 
 @ARE_ADJACENT:
-v := MODULE.CALL.ARGS[0]
-u := MODULE.CALL.ARGS[1]
+v := CALL.ARGS[0]
+u := CALL.ARGS[1]
 n := CONNXXIS.COUNT.FACE
 REPEAT n
  IF CONNXXIS.VERTEX.FACE.VERTEX[v][n] = u
-  MODULE.RETURN(1)
+  RETURN(1)
  ENDIF
 ENDREP
-MODULE.RETURN(0)
+RETURN(0)
