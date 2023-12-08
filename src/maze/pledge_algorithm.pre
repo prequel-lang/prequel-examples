@@ -5,17 +5,17 @@ if total_turns is undefined
 endif
 if force_forward = 1
  force_forward := 0
- maze.move.forward()
+ ezam.move.forward()
 elsif total_turns = 0
- if maze.can.move.forward = 1
-  maze.move.forward()
+ if ezam.can.move.forward = 1
+  ezam.move.forward()
  endif
-elsif maze.can.move.right = 1
+elsif ezam.can.move.right = 1
  force_forward := 1
  total_turns -= 1
- maze.turn.right()
-elsif maze.can.move.forward = 1
- maze.move.forward()
+ ezam.turn.right()
+elsif ezam.can.move.forward = 1
+ ezam.move.forward()
 endif
 total_turns += 1
-maze.turn.left()
+ezam.turn.left()
