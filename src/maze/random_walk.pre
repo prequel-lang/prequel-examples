@@ -14,18 +14,13 @@ if options = 0   # dead end
  maze.move(to_cardinal)
 endif
 random_option :~ options
-to_cardinal := (maze.from+1)%4
-if maze.can_move[to_cardinal] = 1 and to_cardinal <> maze.key_needed
- if random_option = 0
-  maze.move(to_cardinal)
+n := maze.can_move.length
+repeat n
+ to_cardinal := (maze.from+maze.can_move.length-n) % maze.can_move.length
+ if maze.can_move[to_cardinal] = 1 and to_cardinal <> maze.key_needed
+  if random_option = 0
+   maze.move(to_cardinal)
+  endif
+  random_option--
  endif
- random_option--
-endif
-to_cardinal := (maze.from+3)%4
-if maze.can_move[to_cardinal] = 1 and to_cardinal <> maze.key_needed
- if random_option = 0
-  maze.move(to_cardinal)
- endif
-endif
-to_cardinal := (maze.from+2)%4
-maze.move(to_cardinal)
+endrep
