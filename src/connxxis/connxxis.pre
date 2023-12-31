@@ -5,12 +5,12 @@ if incr_idxs is undefined
  repeat n
   i := incr_idxs.length
   c := connxxis.hiscore.incr.count(i)
-  debugl "++ " i " " c
-  incr_idxs.push 0
+  debugl("++ ", i, " ", c)
+  incr_idxs.push(0)
  endrep
  iidx := 0
  ilen := connxxis.hiscore.incr.count(iidx)
- debugl iidx " " incr_idxs[iidx] " " ilen
+ debugl(iidx, " ", incr_idxs[iidx], " ", ilen)
  wmin := 0
  hnow := 1
  hiscore := connxxis.hiscore.incr(iidx, incr_idxs[iidx])
@@ -23,8 +23,8 @@ if connxxis.hiscore.incr.index >= incr_idxs.length
  repeat n
   i := incr_idxs.length
   c := connxxis.hiscore.incr.count(i)
-  debugl "++ " i " " c
-  incr_idxs.push 0
+  debugl("++ ", i, " ", c)
+  incr_idxs.push(0)
  endrep
 endif
 if hnow = 1
@@ -39,18 +39,18 @@ if hnow = 1
    endif
    info := [v, n, []]
    info[2] := call(@get_rotations, v, n)
-   stack.queue info
+   stack.queue(info)
   endrep
  endrep
- info := stack.unqueue
- v := info.unqueue
- u := info.unqueue
- rotations := info.unqueue
+ info := stack.unqueue()
+ v := info.unqueue()
+ u := info.unqueue()
+ rotations := info.unqueue()
  undo_move := 0
  connxxis.move(connxxis.vertex.tile[u], v)
 endif
 if rotations.length > 0
- rotation := rotations.unqueue
+ rotation := rotations.unqueue()
  tile_rotations := connxxis.tile.rotation
  tile_rotations[connxxis.vertex.tile[u]] := rotation[0]
  tile_rotations[connxxis.vertex.tile[v]] := rotation[1]
@@ -61,16 +61,16 @@ if undo_move = 0
  connxxis.move(connxxis.vertex.tile[u], v)
 endif
 if stack.length > 0
- info := stack.unqueue
- v := info.unqueue
- u := info.unqueue
- rotations := info.unqueue
+ info := stack.unqueue()
+ v := info.unqueue()
+ u := info.unqueue()
+ rotations := info.unqueue()
  undo_move := 0
  connxxis.move(connxxis.vertex.tile[u], v)
 endif
 incr_idxs[iidx]++
 if incr_idxs[iidx] < ilen
- debugl iidx " " incr_idxs[iidx] " " ilen
+ debugl(iidx, " ", incr_idxs[iidx], " ", ilen)
  wmin := 0
  hnow := 1
  hiscore := connxxis.hiscore.incr(iidx, incr_idxs[iidx])
@@ -84,7 +84,7 @@ else
  if iidx < connxxis.hiscore.incr.index
   iidx++
   ilen := connxxis.hiscore.incr.count(iidx)
-  debugl iidx " " incr_idxs[iidx] " " ilen
+  debugl(iidx, " ", incr_idxs[iidx], " ", ilen)
   wmin := 0
   hnow := 1
   hiscore := connxxis.hiscore.incr(iidx, incr_idxs[iidx])
@@ -95,10 +95,10 @@ else
 endif
 wmin++
 if wmin <= 24*60
- debugl "wait:" wmin
+ debugl("wait:", wmin)
  connxxis.wait(60)
 endif
-debugl "halt"
+debugl("halt")
 connxxis.halt()
 
 @get_rotations:
@@ -113,21 +113,21 @@ if are_adjacent = 1
  repeat n
   m := 6
   repeat m
-   rotations.queue [(vtr+n)%6, (utr+m)%6]
+   rotations.queue([(vtr+n)%6, (utr+m)%6])
   endrep
  endrep
- rotz := rotations.unqueue
- rotations.push rotz
+ rotz := rotations.unqueue()
+ rotations.push(rotz)
 else
  n := 5
  repeat n
-  rotations.queue [(vtr+n+1)%6, utr]
+  rotations.queue([(vtr+n+1)%6, utr])
  endrep
  n := 5
  repeat n
-  rotations.queue [vtr, (utr+n+1)%6]
+  rotations.queue([vtr, (utr+n+1)%6])
  endrep
- rotations.push [vtr, utr]
+ rotations.push([vtr, utr])
 endif
 return(rotations)
 

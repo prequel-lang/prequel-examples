@@ -11,7 +11,7 @@ if spacing is undefined
   r := math.round(r * 255)
   g := math.round(g * 255)
   b := math.round(b * 255)
-  pixels_data.push [r, g, b, 1]
+  pixels_data.push([r, g, b, 1])
   blinkp.set_pixel(x, pixels_data[x][0], pixels_data[x][1], pixels_data[x][2], pixels_data[x][3]/10)
  endrep
  max_brightness := 10
