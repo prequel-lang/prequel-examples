@@ -4,20 +4,20 @@
 
 if reds is undefined
  blinkp.set_brightness(0.7)
- reds := [0, 16, 64, 128, 128, 192, 192, 255, 255, 192, 192, 128, 128, 64, 16, 0]
+ reds = [0, 16, 64, 128, 128, 192, 192, 255, 255, 192, 192, 128, 128, 64, 16, 0]
 endif
 
 # sine wave, spends a little longer at min/max
-# delta := (blinkp.elapsed_time%60) * 5
-# offset := math.round(((math.sin(delta) + 1) / 2) * (blinkp.num_pixels - 1))
+# delta = (blinkp.elapsed_time%60) * 5
+# offset = math.round(((math.sin(delta) + 1) / 2) * (blinkp.num_pixels - 1))
 
 # triangle wave, a snappy ping-pong effect
-delta := (blinkp.elapsed_time%60) * 10
-offset := math.abs((delta % reds.length) - blinkp.num_pixels)
+delta = (blinkp.elapsed_time%60) * 10
+offset = math.abs((delta % reds.length) - blinkp.num_pixels)
 
-n := blinkp.num_pixels
+n = blinkp.num_pixels
 repeat n
- i := blinkp.num_pixels-n-1
+ i = blinkp.num_pixels-n-1
  blinkp.set_pixel(i, reds[offset+i], 0, 0)
 endrep
 

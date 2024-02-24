@@ -1,24 +1,24 @@
 @random_walk:
-if maze.key_needed >= 0 and maze.has_key = 1
+if maze.key_needed >= 0 and maze.has_key == 1
  maze.move(maze.key_needed)
 endif
-options := 0
-n := maze.can_move.length
+options = 0
+n = maze.can_move.length
 repeat n
- if n <> maze.from and n <> maze.key_needed and maze.can_move[n] = 1
+ if n <> maze.from and n <> maze.key_needed and maze.can_move[n] == 1
   options += 1
  endif
 endrep
-if options = 0   # dead end
- to_cardinal := maze.from
+if options == 0   # dead end
+ to_cardinal = maze.from
  maze.move(to_cardinal)
 endif
-random_option :~ options
-n := maze.can_move.length
+random_option ~= options
+n = maze.can_move.length
 repeat n
- to_cardinal := (maze.from+maze.can_move.length-n) % maze.can_move.length
- if maze.can_move[to_cardinal] = 1 and to_cardinal <> maze.key_needed
-  if random_option = 0
+ to_cardinal = (maze.from+maze.can_move.length-n) % maze.can_move.length
+ if maze.can_move[to_cardinal] == 1 and to_cardinal <> maze.key_needed
+  if random_option == 0
    maze.move(to_cardinal)
   endif
   random_option--

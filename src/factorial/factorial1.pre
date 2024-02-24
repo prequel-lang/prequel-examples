@@ -1,6 +1,6 @@
 @factorial:
-n := factorial.input
-result := 1
+n = factorial.input
+result = 1
 repeat n
  result *= n+1
 endrep

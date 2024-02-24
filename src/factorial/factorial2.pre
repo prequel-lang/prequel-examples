@@ -1,7 +1,7 @@
 @factorial:
 if n is undefined
- n := factorial.input
- result := 1
+ n = factorial.input
+ result = 1
 endif
 if n <= 1
  factorial.return(result)

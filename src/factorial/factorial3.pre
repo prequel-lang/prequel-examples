@@ -1,10 +1,10 @@
 @main:
-result := call(@factorial, factorial.input)
+result = call(@factorial, factorial.input)
 factorial.return(result)
 
 @factorial:
-n := call.args[0]
-result := 1
+n = call.args[0]
+result = 1
 repeat n
  result *= n+1
 endrep
