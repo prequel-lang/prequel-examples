@@ -1,13 +1,13 @@
 @listsort:
-n := listsort.input.length
+n = listsort.input.length
 repeat n   # go down to find an out-of-order element
  if listsort.input[n-1] > listsort.input[n]
-  r := listsort.input.length-1-n
-  i := r
+  r = listsort.input.length-1-n
+  i = r
   repeat i # go up to find its proper place
    if listsort.input[n-1] < listsort.input[n+r-i]
     r--  # move from n-1 to n+r-i-1
-    repstop
+    break
    endif
   endrep
   listsort.move(n-1, n+r-i)

@@ -1,20 +1,20 @@
 @pledge_algorithm:
 if total_turns is undefined
- total_turns := 0
- force_forward := 0
+ total_turns = 0
+ force_forward = 0
 endif
-if force_forward = 1
- force_forward := 0
+if force_forward == 1
+ force_forward = 0
  ezam.move.forward()
-elsif total_turns = 0
- if ezam.can.move.forward = 1
+elif total_turns == 0
+ if ezam.can.move.forward == 1
   ezam.move.forward()
  endif
-elsif ezam.can.move.right = 1
- force_forward := 1
+elif ezam.can.move.right == 1
+ force_forward = 1
  total_turns -= 1
  ezam.turn.right()
-elsif ezam.can.move.forward = 1
+elif ezam.can.move.forward == 1
  ezam.move.forward()
 endif
 total_turns += 1

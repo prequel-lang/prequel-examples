@@ -1,24 +1,24 @@
 @random_walk:
-options := ezam.can.move.forward
+options = ezam.can.move.forward
 options += ezam.can.move.left
 options += ezam.can.move.right
-if options = 0   # dead end
- turn_left :~ 2
- if turn_left = 1
+if options == 0   # dead end
+ turn_left ~= 2
+ if turn_left == 1
   ezam.turn.left()
  else
   ezam.turn.right()
  endif
 endif
-random_option :~ options
-if ezam.can.move.left = 1
- if random_option = 0
+random_option ~= options
+if ezam.can.move.left == 1
+ if random_option == 0
   ezam.turn.left()
  endif
  random_option--
 endif
-if ezam.can.move.right = 1
- if random_option = 0
+if ezam.can.move.right == 1
+ if random_option == 0
   ezam.turn.right()
  endif
 endif

@@ -1,18 +1,18 @@
 @qualifier:
 if my.index <> team.players[players.team[my.index]][0]
-elsif indexes.points.length = 0
-elsif angle is undefined
+elif indexes.points.length == 0
+elif angle is undefined
  if bearing.point[indexes.points[0]] > 0
-  angle := bearing.point[indexes.points[0]]
-  start_tick := ticks.current+ticks.per_second
+  angle = bearing.point[indexes.points[0]]
+  start_tick = ticks.current+ticks.per_second
  endif
-elsif ticks.current < start_tick
+elif ticks.current < start_tick
  if angle > bearing.point[indexes.points[0]]
   if bearing.point[indexes.points[0]] > 0
-   angle := bearing.point[indexes.points[0]]
+   angle = bearing.point[indexes.points[0]]
   endif
  endif
-elsif bearing.point[indexes.points[0]] <= 10*angle
+elif bearing.point[indexes.points[0]] <= 10*angle
  warpchase.activate()
 endif
 warpchase.deactivate()

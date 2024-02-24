@@ -1,36 +1,36 @@
 @pulse:
 if spacing is undefined
- spacing := 360 / blinkp.num_pixels
- hue := 0
- pixels_data := []
- n := blinkp.num_pixels
+ spacing = 360 / blinkp.num_pixels
+ hue = 0
+ pixels_data = []
+ n = blinkp.num_pixels
  repeat n
-  x := blinkp.num_pixels-n-1
-  h := ((hue + x*spacing) % 360) / 360
-  r, g, b := blinkp.hsv_to_rgb(h, 1.0, 1.0)
-  r := math.round(r * 255)
-  g := math.round(g * 255)
-  b := math.round(b * 255)
+  x = blinkp.num_pixels-n-1
+  h = ((hue + x*spacing) % 360) / 360
+  r, g, b = blinkp.hsv_to_rgb(h, 1.0, 1.0)
+  r = math.round(r * 255)
+  g = math.round(g * 255)
+  b = math.round(b * 255)
   pixels_data.push([r, g, b, 1])
   blinkp.set_pixel(x, pixels_data[x][0], pixels_data[x][1], pixels_data[x][2], pixels_data[x][3]/10)
  endrep
- max_brightness := 10
- goal :~ max_brightness
+ max_brightness = 10
+ goal ~= max_brightness
  goal += 1
- dir := 1
- delay := 1 / blinkp.num_pixels
+ dir = 1
+ delay = 1 / blinkp.num_pixels
 endif
-n := pixels_data.length-1
+n = pixels_data.length-1
 repeat n
- pixels_data[n+1][3] := pixels_data[n][3]
+ pixels_data[n+1][3] = pixels_data[n][3]
 endrep
-brightness := pixels_data[0][3]
-incr :~ max_brightness*3/10
+brightness = pixels_data[0][3]
+incr ~= max_brightness*3/10
 brightness += incr * dir
 if dir > 0
  if brightness >= goal
-  brightness := goal
-  goal :~ max_brightness
+  brightness = goal
+  goal ~= max_brightness
   goal += 1
   if goal < brightness
    dir *= -1
@@ -38,16 +38,16 @@ if dir > 0
  endif
 else
  if brightness <= goal
-  brightness := goal
-  goal :~ max_brightness
+  brightness = goal
+  goal ~= max_brightness
   goal += 1
   if goal > brightness
    dir *= -1
   endif
  endif
 endif
-pixels_data[0][3] := brightness
-n := blinkp.num_pixels
+pixels_data[0][3] = brightness
+n = blinkp.num_pixels
 repeat n
  blinkp.set_pixel(n, pixels_data[n][0], pixels_data[n][1], pixels_data[n][2], pixels_data[n][3]/10)
 endrep

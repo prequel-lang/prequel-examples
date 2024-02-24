@@ -1,18 +1,18 @@
 @ackermann:
 if ackermann is undefined
- ackermann := [ackermann.input]
+ ackermann = [ackermann.input]
 endif
-m_n := ackermann.pop()
-if m_n[0] = 0
- if ackermann.length = 0
+m_n = ackermann.pop()
+if m_n[0] == 0
+ if ackermann.length == 0
   ackermann.return(m_n[1]+1)
  endif
- prev_m_n := ackermann.pop()
+ prev_m_n = ackermann.pop()
  prev_m_n.push(m_n[1]+1)
  ackermann.push(prev_m_n)
-elsif m_n[1] = 0
+elif m_n[1] == 0
  m_n[0] -= 1
- m_n[1] := 1
+ m_n[1] = 1
  ackermann.push(m_n)
 else
  ackermann.push([m_n[0]-1])

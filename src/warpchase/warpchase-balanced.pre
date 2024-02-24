@@ -1,7 +1,7 @@
 @combined_strategies:
-one_rad := math.pi/180
+one_rad = math.pi/180
 call(&_, @power_seeker)
-predator_index := call(@get_nearest_predator_index)
+predator_index = call(@get_nearest_predator_index)
 if predator_index >= 0 and (distance_r.player[predator_index] <= math.min(warp.x, warp.y)/2 or bearing.player.player[predator_index][my.index] <= 15*!one_rad)
  call(&_, @run_away, predator_index)
 endif
@@ -21,20 +21,20 @@ endif
 return(0)
 
 @get_nearest_predator_index:
-predator_index := -1
-r := indexes.players.others.length
-l := r
+predator_index = -1
+r = indexes.players.others.length
+l = r
 repeat r
- pidx := indexes.players.others[l-r-1]
+ pidx = indexes.players.others[l-r-1]
  if players.remaining_power[pidx] > 0
-  predator_index := pidx
-  repstop
+  predator_index = pidx
+  break
  endif
 endrep
 return(predator_index)
 
 @run_away:
-predator_index := call.args[0]
+predator_index = call.args[0]
 if predator_index >= 0
  if bearing.player[predator_index] >= 90*!one_rad and bearing.player[predator_index] <= 135*!one_rad
   warpchase.activate()
@@ -44,17 +44,17 @@ return(0)
 
 @predator:
 if players.remaining_power[my.index] > 0
- score := call.args[0]
- prey_index := -1
- r := indexes.players.others.length
- l := r
+ score = call.args[0]
+ prey_index = -1
+ r = indexes.players.others.length
+ l = r
  repeat r
-  pidx := indexes.players.others[l-r-1]
-  if players.score[pidx] > 0 and players.score[pidx] >= score and players.remaining_power[pidx] = 0 and players.remaining_shield[pidx] = 0 and players.remaining_inactive[pidx] = 0
-   is_blocked := call(@check_team_block, distance_r.player[pidx])
-   if is_blocked = 0
-    prey_index := pidx
-    repstop
+  pidx = indexes.players.others[l-r-1]
+  if players.score[pidx] > 0 and players.score[pidx] >= score and players.remaining_power[pidx] == 0 and players.remaining_shield[pidx] == 0 and players.remaining_inactive[pidx] == 0
+   is_blocked = call(@check_team_block, distance_r.player[pidx])
+   if is_blocked == 0
+    prey_index = pidx
+    break
    endif
   endif
  endrep
@@ -70,8 +70,8 @@ return(0)
 if indexes.points.length > 0
  if bearing.point[indexes.points[0]] <= 15*!one_rad
   if players.remaining_power[my.index] > 0
-   is_blocked := call(@check_team_block, distance_r.point[0])
-   if is_blocked = 0
+   is_blocked = call(@check_team_block, distance_r.point[0])
+   if is_blocked == 0
     warpchase.activate()
    endif
   else
@@ -82,19 +82,19 @@ endif
 return(0)
 
 @check_team_block:
-distance := call.args[0]
-is_blocked := 0
-r := indexes.players.team.length
-l := r
+distance = call.args[0]
+is_blocked = 0
+r = indexes.players.team.length
+l = r
 repeat r
- pidx := indexes.players.team[l-r-1]
+ pidx = indexes.players.team[l-r-1]
  if players.remaining_shield[pidx] > 0 or players.remaining_inactive[pidx] > 0 or distance_r.player[pidx] >= distance
-  repnext
+  continue
  endif
  if bearing.player[pidx] < 90*!one_rad
-  repnext
+  continue
  endif
- is_blocked := 1
- repstop
+ is_blocked = 1
+ break
 endrep
 return(is_blocked)

@@ -1,19 +1,19 @@
 @random_bot:
 if action is undefined
- action := 1
- until_tick := ticks.current
+ action = 1
+ until_tick = ticks.current
 endif
 if ticks.current >= until_tick
- if action = 1
-  r :~ 1*ticks.per_second
+ if action == 1
+  r ~= 1*ticks.per_second
  else
-  r :~ 9*ticks.per_second
+  r ~= 9*ticks.per_second
   r += 1*ticks.per_second
  endif
- action := -1*(action-1)
- until_tick := ticks.current+r+1
+ action = -1*(action-1)
+ until_tick = ticks.current+r+1
 endif
-if action = 1
+if action == 1
  warpchase.activate()
 endif
 warpchase.deactivate()

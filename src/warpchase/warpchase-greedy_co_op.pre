@@ -1,16 +1,16 @@
 @greedy_co_op:
-n1 := indexes.points.length
+n1 = indexes.points.length
 repeat n1
- i1 := indexes.points.length-n1-1
- min_dist := distance_r.point[indexes.points[i1]]
- n2 := indexes.players.team.length
+ i1 = indexes.points.length-n1-1
+ min_dist = distance_r.point[indexes.points[i1]]
+ n2 = indexes.players.team.length
  repeat n2
   if min_dist > distance_r.player.point[indexes.players.team[n2]][indexes.points[i1]]
-   min_dist := distance_r.player.point[indexes.players.team[n2]][indexes.points[i1]]
-   repstop
+   min_dist = distance_r.player.point[indexes.players.team[n2]][indexes.points[i1]]
+   break
   endif
  endrep
- if min_dist = distance_r.point[indexes.points[i1]]
+ if min_dist == distance_r.point[indexes.points[i1]]
   if bearing.point[indexes.points[i1]] <= 15*math.pi/180
    warpchase.activate()
   endif
