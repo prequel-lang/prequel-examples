@@ -13,6 +13,6 @@ elif ticks.current < start_tick
   endif
  endif
 elif bearing.point[indexes.points[0]] <= 10*angle
- warpchase.activate()
+ amoeba.activate()
 endif
-warpchase.deactivate()
+amoeba.deactivate()

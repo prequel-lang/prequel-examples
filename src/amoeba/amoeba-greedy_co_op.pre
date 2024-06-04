@@ -12,9 +12,9 @@ repeat n1
  endrep
  if min_dist == distance_r.point[indexes.points[i1]]
   if bearing.point[indexes.points[i1]] <= 15*math.pi/180
-   warpchase.activate()
+   amoeba.activate()
   endif
-  warpchase.deactivate()
+  amoeba.deactivate()
  endif
 endrep
-warpchase.deactivate()
+amoeba.deactivate()
