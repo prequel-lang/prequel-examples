@@ -14,6 +14,6 @@ if ticks.current >= until_tick
  until_tick = ticks.current+r+1
 endif
 if action == 1
- warpchase.activate()
+ amoeba.activate()
 endif
-warpchase.deactivate()
+amoeba.deactivate()

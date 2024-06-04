@@ -10,12 +10,12 @@ if players.score[my.index] > 0
  call(&_, @run_away, predator_index)
 endif
 call(&_, @greedy)
-warpchase.deactivate()
+amoeba.deactivate()
 
 @power_seeker:
 if indexes.powers.length > 0
  if bearing.power[indexes.powers[0]] <= 15*!one_rad
-  warpchase.activate()
+  amoeba.activate()
  endif
 endif
 return(0)
@@ -37,7 +37,7 @@ return(predator_index)
 predator_index = call.args[0]
 if predator_index >= 0
  if bearing.player[predator_index] >= 90*!one_rad and bearing.player[predator_index] <= 135*!one_rad
-  warpchase.activate()
+  amoeba.activate()
  endif
 endif
 return(0)
@@ -60,7 +60,7 @@ if players.remaining_power[my.index] > 0
  endrep
  if prey_index >= 0
   if bearing.player[prey_index] <= 15*!one_rad
-   warpchase.activate()
+   amoeba.activate()
   endif
  endif
 endif
@@ -72,10 +72,10 @@ if indexes.points.length > 0
   if players.remaining_power[my.index] > 0
    is_blocked = call(@check_team_block, distance_r.point[0])
    if is_blocked == 0
-    warpchase.activate()
+    amoeba.activate()
    endif
   else
-   warpchase.activate()
+   amoeba.activate()
   endif
  endif
 endif
