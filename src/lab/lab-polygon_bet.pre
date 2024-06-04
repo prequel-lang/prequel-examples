@@ -1,0 +1,215 @@
+@main:
+if !state is undefined
+ lab.set_title("Polygon Bet")
+ call(@init)
+ lab.update()
+endif
+if !state == !k_st_select
+ call(@select)
+elif !state == !k_st_selected
+ call(@selected)
+elif !state == !k_st_run
+ call(@run)
+elif !state == !k_st_finish
+ call(@finish)
+elif !state == !k_st_reset
+ call(@reset)
+else
+ lab.halt() # unreachable
+endif
+lab.update()
+
+@reset:
+if !step < !tps
+ !step++
+ return()
+endif
+!state = !k_st_select
+!step = 0
+return()
+
+@finish:
+if !step < !tps
+ !step++
+ n = !finish.length
+ repeat n
+  !ps[n][!k_x] += !finish[n]
+  lab.set_origin(!ps[n][!k_obj], !ps[n][!k_x], !ps[n][!k_y])
+ endrep
+ return()
+endif
+!state = !k_st_reset
+n = !ps.length
+repeat n
+ !ps[n][!k_x] = 0
+ lab.set_origin(!ps[n][!k_obj], !ps[n][!k_x], !ps[n][!k_y])
+endrep
+lab.set_color(!ps[!selected][!k_obj], !c_n[0], !c_n[1], !c_n[2])
+!step = 0
+return()
+
+@run:
+if !step < !tps
+ !step++
+ !ps[!run][!k_x] += ((2*(!hsz-!radius))/!run_steps)/!tps
+ lab.set_origin(!ps[!run][!k_obj], !ps[!run][!k_x], !ps[!run][!k_y])
+ lab.set_angle(!ps[!run][!k_obj], -2*math.pi*!step/!tps)
+ return()
+endif
+if !ps[!run][!k_x] >= !hsz-!radius
+ !state = !k_st_finish
+ if !selected == !run
+  lab.set_color(!ps[!selected][!k_obj], !c_w[0], !c_w[1], !c_w[2])
+ else
+  lab.set_color(!ps[!selected][!k_obj], !c_l[0], !c_l[1], !c_l[2])
+ endif
+ !finish = []
+ n = !ps.length
+ repeat n
+  !finish.queue(-1*!ps[n][!k_x]/!tps)
+ endrep
+ !step = 0
+ return()
+endif
+!run ~= !ps.length
+!step = 0
+return()
+
+@selected:
+if !ps[0][!k_x] <= -(!hsz-!radius)
+ !state = !k_st_run
+ n = !ps.length
+ repeat n
+  !ps[n][!k_x] = -(!hsz-!radius)
+  lab.set_origin(!ps[n][!k_obj], !ps[n][!k_x], !ps[n][!k_y])
+ endrep
+ !run ~= !ps.length
+ !step = 0
+ return()
+endif
+n = !ps.length
+repeat n
+ !ps[n][!k_x] -= (!hsz-!radius)/!tps
+ lab.set_origin(!ps[n][!k_obj], !ps[n][!k_x], !ps[n][!k_y])
+endrep
+return()
+
+@select:
+rgbs = []
+n1 = !ps.length
+repeat n1
+ n2 = !c_n.length
+ repeat n2
+  rgbs.queue(!c_n[n2])
+ endrep
+endrep
+touched, x, y = lab.get_pressed()
+if touched
+ touched = lab.get_touchable(x, y, 0)
+ if touched <= 0
+  touched = 0
+ endif
+endif
+if not touched
+ !step = (!step+1)%(8*!tps/2)
+ if !step >= 1*!tps/2 and !step < 2*!tps/2
+  rgbs[3*0+0] = !c_t[0]
+  rgbs[3*0+1] = !c_t[1]
+  rgbs[3*0+2] = !c_t[2]
+ elif !step >= 3*!tps/2 and !step < 4*!tps/2
+  rgbs[3*1+0] = !c_t[0]
+  rgbs[3*1+1] = !c_t[1]
+  rgbs[3*1+2] = !c_t[2]
+ elif !step >= 5*!tps/2 and !step < 6*!tps/2
+  rgbs[3*2+0] = !c_t[0]
+  rgbs[3*2+1] = !c_t[1]
+  rgbs[3*2+2] = !c_t[2]
+ endif
+endif
+n = !ps.length
+repeat n
+ obj = !ps[n][!k_obj]
+ lab.set_color(obj, rgbs[3*n+0], rgbs[3*n+1], rgbs[3*n+2])
+endrep
+if touched
+ n = !ps.length
+ repeat n
+  if touched == !ps[n][!k_obj]
+   lab.set_color(touched, !c_s[0], !c_s[1], !c_s[2])
+   !state = !k_st_selected
+   !selected = n
+   break
+  endif
+ endrep
+endif
+return()
+
+@init:
+!hsz = lab.half_screen_size
+!tps = lab.ticks_per_second
+!run_steps = 10
+!k_obj = 0
+!k_x = 1
+!k_y = 2
+!k_st_select = 0
+!k_st_selected = 1
+!k_st_run = 2
+!k_st_finish = 3
+!k_st_reset = 4
+!c_n = [160, 160, 160] # rgb color_normal
+!c_t = [ 64,  64,  64] # rgb color_tease
+!c_s = [255, 255, 255] # rgb color_selected
+!c_w = [  0, 255,   0] # rgb color_won
+!c_l = [255,   0,   0] # rgb color_lost
+!radius = !hsz/4
+x = 0
+y = !hsz-((!hsz-!radius)/2)
+a = 0
+!ps = []
+p0 = call(@create_object, 3, !radius, x, 1*y, a, !c_n[0], !c_n[1], !c_n[2])
+!ps.push(p0)
+p1 = call(@create_object, 4, !radius, x, 0*y, a, !c_n[0], !c_n[1], !c_n[2])
+!ps.push(p1)
+p2 = call(@create_object, 5, !radius, x, -1*y, a, !c_n[0], !c_n[1], !c_n[2])
+!ps.push(p2)
+!state = !k_st_select
+!step = 0
+return()
+
+@create_object:
+pcount = call.args[0]
+radius = call.args[1]
+origin_x = call.args[2]
+origin_y = call.args[3]
+angle = call.args[4]
+r = call.args[5]
+g = call.args[6]
+b = call.args[7]
+obj = call(@create_polygon, pcount, radius, origin_x, origin_y, angle, r, g, b)
+return([obj, origin_x, origin_y])
+
+@create_polygon:
+pcount = call.args[0]
+radius = call.args[1]
+origin_x = call.args[2]
+origin_y = call.args[3]
+angle = call.args[4]
+r = call.args[5]
+g = call.args[6]
+b = call.args[7]
+points = []
+n = pcount
+d = 90+(180+(360/pcount)/2)*(1-pcount%2)
+repeat n
+ d = d+360/pcount
+ a = d*math.pi/180
+ x = math.cos(a)*radius
+ y = math.sin(a)*radius
+ points.push(x)
+ points.push(y)
+endrep
+obj = lab.create(points)
+lab.set_origin(obj, origin_x, origin_y)
+lab.set_angle(obj, angle)
+lab.set_color(obj, r, g, b)
+return(obj)
