@@ -1,0 +1,15 @@
+@main:
+arg_x = lab.data[0]
+arg_y = lab.data[1]
+arg_r = lab.data[2]
+arg_g = lab.data[3]
+arg_b = lab.data[4]
+arg_ellapsed = lab.data[5]
+arg_bots_len = lab.data[6]
+
+ret_angle = math.atan2(arg_y, arg_x)
+ret_r = arg_g
+ret_g = arg_b
+ret_b = arg_r
+
+lab.return([ret_angle, ret_r, ret_g, ret_b])
