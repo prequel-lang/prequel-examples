@@ -1,0 +1,227 @@
+@main:
+if !hsz is undefined
+ lab.set_title("API Test")
+ call(@init)
+ lab.update()
+endif
+call(@finish_bots)
+call(@update_objs)
+call(@create_objs)
+call(@launch_bots)
+lab.update()
+
+@init:
+!hsz = lab.half_screen_size
+call(@init_bots)
+call(@init_square)
+call(@init_triangle)
+!tps = lab.ticks_per_second
+!points = []
+n = 8
+repeat n
+ x = math.cos(math.pi*n*(360/8)/180)*!hsz/5
+ y = math.sin(math.pi*n*(360/8)/180)*!hsz/5
+ !points.push(x)
+ !points.push(y)
+endrep
+!objs = []
+!todo = []
+!doing = []
+!done = []
+return()
+
+@init_bots:
+!bots_count = 5
+if !bots_count > lab.max_bots_count
+ call(@error, "unsupported bots count")
+endif
+lab.reset_bots(1, !bots_count)
+n = !bots_count
+repeat n
+ lab.set_bot(n, 0)
+endrep
+lab.accept(0)
+return()
+
+@init_square:
+r, g, b = call(@get_cur_color)
+points = []
+points.push(-!hsz/4)
+points.push(-!hsz/4)
+points.push(-!hsz/4)
+points.push(!hsz/4)
+points.push(!hsz/4)
+points.push(!hsz/4)
+points.push(!hsz/4)
+points.push(-!hsz/4)
+!square = lab.create(points)
+lab.set_color(!square, r, g, b)
+return()
+
+@init_triangle:
+points = []
+points.push(0)
+points.push(!hsz/5)
+points.push(-!hsz/2)
+points.push(-!hsz/2)
+points.push(!hsz/2)
+points.push(-!hsz/2)
+!triangle = lab.create(points)
+lab.set_origin(!triangle, 0, -!hsz/2)
+lab.set_color(!triangle, 128, 128, 128)
+lab.move_to_back(!triangle, 0)
+return()
+
+@finish_bots:
+err = 0
+n = !doing.length
+repeat n
+ loaded = lab.get_btp_loaded(0)
+ if loaded > 0
+  bot = !doing[!doing.length-1][0]
+  status = lab.get_bot_status(bot)
+  if status < 0
+   err = 1
+   lab.reject(0)
+   lab.accept(0)
+   break
+  elif status == 2
+   result = lab.read_bot_result(bot)
+   bool = call(@is_flat_list, result)
+   if not bool or result.length <> 4
+    err = 1
+    lab.reject(0)
+    lab.accept(0)
+   else
+    doing = !doing.pop()
+    result.queue(doing[1])
+    !done.queue(result)
+   endif
+  endif
+ endif
+endrep
+if err
+ n = !doing.length
+ repeat n
+  !doing.pop()
+ endrep
+endif
+return()
+
+@update_objs:
+r, g, b = call(@get_cur_color)
+lab.set_color(!square, r, g, b)
+lab.set_angle(!square, -(lab.ellapsed%1)*math.pi)
+bool = lab.are_overlapping(!square, !triangle)
+if bool
+ lab.set_color(!triangle, r, g, b)
+endif
+n = !done.length
+repeat n
+ result = !done.pop()
+ obj = result[0]
+ objidx = call(@find_obj, obj)
+ if objidx >= 0
+  angle = result[1]
+  r = result[2]
+  g = result[3]
+  b = result[4]
+  lab.set_color(!objs[objidx][0], r, g, b)
+  x_incr = math.cos(angle)*!hsz*0.7/!tps
+  y_incr = math.sin(angle)*!hsz*0.7/!tps
+  !objs[objidx][5] = x_incr
+  !objs[objidx][6] = y_incr
+ endif
+endrep
+n = !objs.length
+repeat n
+ !objs[n][1]--
+ if !objs[n][1] <= 0
+  lab.remove(!objs[n][0])
+  !objs.pop(n)
+  continue
+ endif
+ lab.set_scale(!objs[n][0], !objs[n][1]/!objs[n][2])
+ lab.set_angle(!objs[n][0], (lab.ellapsed%1)*math.pi)
+ !objs[n][7] += !objs[n][5]
+ !objs[n][8] += !objs[n][6]
+ lab.set_origin(!objs[n][0], !objs[n][7], !objs[n][8])
+endrep
+return()
+
+@create_objs:
+pressed = call(@get_pressed)
+n = pressed.length
+repeat n
+ x = pressed[n][0]
+ y = pressed[n][1]
+ obj = lab.create(!points)
+ lab.set_color(obj, 128, 128, 128)
+ lab.set_origin(obj, x, y)
+ !objs.push([obj, 2*!tps, 2*!tps, x, y, 0, 0, x, y, 0])
+ !todo.queue([obj, x, y])
+endrep
+return()
+
+@launch_bots:
+if !todo.length <= 0
+ return()
+endif
+loaded = lab.get_btp_loaded(0)
+if loaded > 0
+ n = !bots_count
+ repeat n
+  status = lab.get_bot_status(n)
+  if status == 0
+   todo = !todo.pop()
+   obj = todo[0]
+   x = todo[1]
+   y = todo[2]
+   r, g, b = call(@get_cur_color)
+   lab.set_data(n, [x, y, r, g, b, lab.ellapsed, !objs.length])
+   lab.launch(n)
+   !doing.queue([n, obj, x, y])
+   if !todo.length <= 0
+    break
+   endif
+  endif
+ endrep
+endif
+return()
+
+@is_flat_list:
+if call.args[0] isnot list
+ return(0)
+endif
+n = call.args[0].length
+repeat n
+ if call.args[0][n] isnot number
+  return(0)
+ endif
+endrep
+return(1)
+
+@find_obj:
+obj = call.args[0]
+n = !objs.length
+repeat n
+ if !objs[n][0] == obj
+  return(n)
+ endif
+endrep
+return(-1)
+
+@get_cur_color:
+hue = (lab.ellapsed/3.5) % 1
+r, g, b = lab.hsv_to_rgb(hue, 1, 1)
+return(r*255, g*255, b*255)
+
+@get_pressed:
+if pressed is undefined
+ pressed = []
+endif
+bool, x, y = lab.get_pressed()
+if not bool
+ return(pressed)
+endif
+pressed.push([x, y])
